@@ -1,2 +1,2 @@
 # analytics
-Analytics microservice
+Analytics microservice built on Flask
