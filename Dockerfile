@@ -1,25 +1,24 @@
-# Use an official Python runtime as a parent image
-FROM python:3.12-slim
+#------------------------------------------------------------------------------
+# Dockerfile for the Analytics microservice
+#------------------------------------------------------------------------------
 
-# Set the working directory in the container
+# Use an official Python runtime as a parent image.
+FROM python:3.9-slim
+
+# Set the working directory inside the container
 WORKDIR /app
 
-# Copy the requirements file into the container
-COPY requirements.txt ./
+# Copy the requirements first (for caching)
+COPY requirements.txt /app/
 
-# Install dependencies
+# Install the dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the current directory contents into the container
-COPY . .
+# Copy the rest of the source code
+COPY . /app/
 
-# Expose the port that Flask will run on
+# Expose the port (optional for local clarity)
 EXPOSE 5000
 
-# Set environment variables for Flask
-ENV FLASK_APP=run.py
-ENV FLASK_RUN_HOST=0.0.0.0
-ENV FLASK_RUN_PORT=5000
-
-# Run the application
-CMD ["flask", "run"]
+# Default command to run the application
+CMD ["python", "src/app.py"]

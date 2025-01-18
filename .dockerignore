@@ -1,6 +1,23 @@
-venv
-__pycache__
-*.pyc
-*.pyo
-*.log
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+# Virtual environment
+venv/
+env/
+
+# Docker
+Dockerfile
+
+# Env files
 .env
+.env.*
+
+# Git
+.git
+.gitignore
+
+# Test coverage or reports
+coverage/
+*.log
+reports/
