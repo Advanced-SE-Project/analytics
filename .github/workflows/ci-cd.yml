@@ -18,18 +18,20 @@ jobs:
       postgres:
         image: postgres:14
         env:
-          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
-          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          POSTGRES_USER: postgres  # Static username (GitHub does not allow secrets here)
+          POSTGRES_PASSWORD: postgres  # Static password (temporarily used)
           POSTGRES_DB: analytics_db
         ports:
           - 5432:5432
         options: >-
-          --health-cmd="pg_isready -U ${{ secrets.POSTGRES_USER }}"
+          --health-cmd="pg_isready -U postgres"
           --health-interval=10s
           --health-timeout=5s
           --health-retries=5
 
     env:
+      POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+      POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
       DATABASE_URL_TEST: ${{ secrets.DATABASE_URL_TEST }}
       FLASK_ENV: test
       PORT: 5000
@@ -50,12 +52,16 @@ jobs:
 
       - name: Wait for PostgreSQL to be ready
         run: |
-          until pg_isready -h localhost -p 5432 -U ${{ secrets.POSTGRES_USER }}; do
-            echo "Waiting for PostgreSQL to be ready..."
+          until pg_isready -h localhost -p 5432 -U postgres; do
+            echo "Waiting for PostgreSQL..."
             sleep 2
           done
 
-      - name: Run database migrations (if applicable)
+      - name: Change PostgreSQL Credentials Securely
+        run: |
+          PGPASSWORD=postgres psql -h localhost -U postgres -d analytics_test -c "ALTER USER postgres WITH PASSWORD '$POSTGRES_PASSWORD';"
+
+      - name: Run database migrations
         run: |
           alembic upgrade head || echo "Skipping migrations"
 
@@ -68,41 +74,3 @@ jobs:
         with:
           name: coverage-report
           path: ./coverage
-
-  docker-build:
-    needs: test
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-
-      - name: Log in to Docker Hub
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-
-      - name: Build Docker Image
-        run: |
-          docker build -t guzaingrid/analytics-microservice:latest .
-
-      - name: Push Docker Image to Docker Hub
-        run: |
-          docker push guzaingrid/analytics-microservice:latest
-
-  deploy-local:
-    needs: docker-build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Pull Latest Docker Image
-        run: |
-          docker pull guzaingrid/analytics-microservice:latest
-
-      - name: Run Docker Container Locally
-        run: |
-          docker stop analytics-microservice || true
-          docker rm analytics-microservice || true
-          docker run -d --name analytics-microservice -p 5000:5000 guzaingrid/analytics-microservice:latest
