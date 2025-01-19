@@ -1,7 +1,7 @@
 import pytest
 from src.utils.aggregator import (
     compute_line_data,
-    compute_pie_data,
+    compute_pie_data_range,
     compute_bar_data
 )
 from src.utils.date_utils import parse_month_year, parse_full_date, generate_month_range
@@ -42,20 +42,20 @@ def test_compute_line_data():
     assert result["expenseData"] == [150.75, 100.0]
 
 
-def test_compute_pie_data():
+def test_compute_pie_data_range():
     transactions = [
         {"date": "03-11-2023", "type": "spent", "amount": 50, "category": "Groceries"},
         {"date": "03-11-2023", "type": "spent", "amount": 20, "category": "Rent"},
         {"date": "03-11-2023", "type": "receive", "amount": 1000, "category": "Salary"}
     ]
     categories_expense = ["Rent", "Groceries", "Utilities", "Entertainment", "Other"]
-    expense_result = compute_pie_data(transactions, 11, 2023, categories_expense, expense=True)
+    expense_result = compute_pie_data_range(transactions, 11, 2023, 11, 2023, categories_expense, expense=True)
     # "Rent" => 20, "Groceries" => 50, "Utilities" => 0, "Entertainment" => 0, "Other" => 0
     assert expense_result["labels"] == categories_expense
     assert expense_result["data"] == [20.0, 50.0, 0.0, 0.0, 0.0]
 
     categories_income = ["Salary", "Investment", "Gift", "Refund", "Other"]
-    income_result = compute_pie_data(transactions, 11, 2023, categories_income, expense=False)
+    income_result = compute_pie_data_range(transactions, 11, 2023, 11, 2023, categories_income, expense=False)
     # Only 1 income of 1000 for "Salary"
     assert income_result["labels"] == categories_income
     assert income_result["data"] == [1000.0, 0.0, 0.0, 0.0, 0.0]
