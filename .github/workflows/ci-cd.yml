@@ -20,7 +20,7 @@ jobs:
         env:
           POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-          POSTGRES_DB: analytics_test
+          POSTGRES_DB: analytics_db
         ports:
           - 5432:5432
         options: >-
