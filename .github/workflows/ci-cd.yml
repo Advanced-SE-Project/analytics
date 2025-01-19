@@ -59,7 +59,7 @@ jobs:
 
       - name: Change PostgreSQL Credentials Securely
         run: |
-          PGPASSWORD=postgres psql -h localhost -U postgres -d analytics_test -c "ALTER USER postgres WITH PASSWORD '$POSTGRES_PASSWORD';"
+          PGPASSWORD=postgres psql -h localhost -U postgres -d analytics_db -c "ALTER USER postgres WITH PASSWORD '$POSTGRES_PASSWORD';"
 
       - name: Run database migrations
         run: |
