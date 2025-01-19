@@ -15,6 +15,7 @@ env/
 
 # Coverage, logs, and build artifacts
 coverage/
+.coverage
 *.log
 reports/
 
