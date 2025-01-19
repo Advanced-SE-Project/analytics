@@ -67,7 +67,7 @@ jobs:
 
       - name: Run Unit Tests with Full Coverage
         run: |
-          pytest tests/ --cov=src --cov-report=term-missing
+          pytest tests/ --cov=src --cov-report=term-missing --cov-report=xml
 
       - name: Upload Coverage Report (GitHub Artifacts)
         uses: actions/upload-artifact@v3
