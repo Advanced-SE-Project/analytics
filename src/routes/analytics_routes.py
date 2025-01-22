@@ -151,7 +151,7 @@ def get_income_pie_range():
     start_m, start_y = parse_month_year(start_month_str)
     end_m, end_y = parse_month_year(end_month_str)
 
-    categories = ["Salary", "Investments", "Gifts", "Refunds", "Other"]
+    categories = ["Salary", "Investment", "Gift", "Refund", "Other"]
     
     result = compute_pie_data_range(
         transactions, start_m, start_y, end_m, end_y,

@@ -5,8 +5,8 @@ def parse_month_year(mm_yyyy):
     """
     try:
         parts = mm_yyyy.split('-')
-        month = int(parts[1])
-        year = int(parts[0])
+        month = int(parts[0])
+        year = int(parts[1])
 
         if month < 1 or month > 12:
             return (0, 0)
@@ -24,7 +24,7 @@ def parse_full_date(dd_mm_yyyy):
       - day must be 1..31
     """
     try:
-        y, m, d = dd_mm_yyyy.split('-')
+        d, m, y = dd_mm_yyyy.split('-')
         day = int(d)
         month = int(m)
         year = int(y)
