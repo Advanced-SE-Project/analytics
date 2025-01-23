@@ -54,7 +54,7 @@ def test_compute_pie_data_range():
     assert expense_result["labels"] == categories_expense
     assert expense_result["data"] == [20.0, 50.0, 0.0, 0.0, 0.0]
 
-    categories_income = ["Salary", "Investment", "Gift", "Refund", "Other"]
+    categories_income = ["Salary", "Investments", "Gifts", "Refunds", "Other"]
     income_result = compute_pie_data_range(transactions, 11, 2023, 11, 2023, categories_income, expense=False)
     # Only 1 income of 1000 for "Salary"
     assert income_result["labels"] == categories_income

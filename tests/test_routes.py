@@ -89,7 +89,7 @@ def test_get_income_pie_range(mock_get, client):
 
     assert "labels" in data
     assert "data" in data
-    assert data["labels"] == ["Salary", "Investment", "Gift", "Refund", "Other"]
+    assert data["labels"] == ["Salary", "Investments", "Gifts", "Refunds", "Other"]
     assert data["data"] == [1000.0, 0.0, 0.0, 0.0, 0.0]
 
     #  Test missing parameters
